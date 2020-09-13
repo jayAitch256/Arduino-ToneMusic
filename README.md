@@ -39,17 +39,6 @@ duration, frequency, legato, \  //Note 2
 
  - 0 = just a normal note, with a small break at the end
  - 1 = the following note will be directly "connected" to this note
-            
-
-
-**Example:** If you want to play a dottered square b3-note, just write: 
-
-```
-#define DOTTERED_SQUARE_B3 { \
-4, b3, legato, \
-8, b3, normal
-}
-```
 
 
 ## Functions
