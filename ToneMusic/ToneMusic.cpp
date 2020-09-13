@@ -26,17 +26,25 @@ void ToneMusic::writeMelody (float melody [], int arraySize, int bpm)
 {
   _bpm = bpm;
   _melodySize = arraySize / 4;
-  //Serial.print("Writing melody of size ");
-  //Serial.println(_melodySize);
   _melody = new float[_melodySize];
 
   for (int i = 0; i < _melodySize; i = i + 3) {
-    melody[i] = (float) ((60000.0 * 4.0) / (_bpm * melody[i]));
-    if (melody[i + 2] != LEGATO) melody[i] = melody[i] - 200.0;
-
-    _melody[i] = melody[i];
-    _melody[i +1] = melody[i +1];
-    _melody[i +2] = melody[i +2];
+    
+	//Calculate length of note in ms
+	melody[i] = (float) ((60000.0 * 4.0) / (_bpm * melody[i]));
+    
+	//Normal: Leave a small break at the end of the note
+	//Legato: No break
+	if (melody[i + 2] != LEGATO) {
+		float smallbreak = melody[i] * 0.15;
+		if (smallbreak > 200.0) smallbreak = 200.0;
+		melody[i + 2] = melody[i];
+		melody[i] = melody[i] - smallbreak;
+	}
+	
+    _melody[i] = melody[i];				//Length of note (playtime)
+    _melody[i + 1] = melody[i + 1];		//Frequency
+    _melody[i + 2] = melody[i + 2];		//Total length of note (playtime + small break)
   }
 }
 
@@ -60,8 +68,7 @@ void ToneMusic::play ()
         _localSpeaker.play(note, dauer);
       }
 
-      if (_melody[_currentIndex + 2] != LEGATO) _resumeMillis = millis() + dauer + 200;
-      else _resumeMillis = millis() + dauer;
+      _resumeMillis = millis() + _melody[_currentIndex + 2];
 
       _currentIndex =  _currentIndex + 3;
     }
