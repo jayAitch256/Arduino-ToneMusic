@@ -36,8 +36,8 @@ void ToneMusic::writeMelody (float melody [], int arraySize, int bpm)
 	//Normal: Leave a small break at the end of the note
 	//Legato: No break
 	if (melody[i + 2] != LEGATO) {
-		float smallbreak = melody[i] * 0.15;
-		if (smallbreak > 200.0) smallbreak = 200.0;
+		float smallbreak = melody[i] * 0.25;
+		if (smallbreak > 150.0) smallbreak = 150.0;
 		melody[i + 2] = melody[i];
 		melody[i] = melody[i] - smallbreak;
 	}
